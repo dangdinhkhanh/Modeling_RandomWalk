@@ -16,6 +16,8 @@ worst_ct = zeros(1,length(n));
 gossiping_time = zeros(1,length(n));
 
 for i = 1:length(k)
+    disp(i);
+    
     for j =1:num_sim
         [ glob_ct_arr(j), best_ct_arr(j),avg_ct_arr(j), worst_ct_arr(j) ] = RandomWalk( k(i), n, pos );
     end
@@ -24,7 +26,11 @@ for i = 1:length(k)
     avg_ct(i) = mean(avg_ct_arr);
     worst_ct(i) = mean(worst_ct_arr);
     
-    gossiping_time(i) = (n*n) * (log(n)*log(n)) / i;
+    if (i==1)
+        gossiping_time(i) = 0;
+    else
+        gossiping_time(i) = (n*n) * (log(n)*log(n)) / i;
+    end
 end
 % disp(sprintf('global cover time %d',glob_ct));
 % disp(sprintf('best local cover time %d',best_ct));
@@ -35,13 +41,16 @@ end
 % k increasing
 theo_ct = zeros(1,length(k));
 max_bound_theo_ct = zeros(1,length(k));
+max_bound_theo_ct2 = zeros(1,length(k));
 
 for i =1:length(k)
     theo_ct(i) = (2/k(i))*(n^2)*2*log(n);
     max_bound_theo_ct(i) = theo_ct(i) + gossiping_time(i);
+    
+    max_bound_theo_ct2(i) = glob_ct(1)/i + gossiping_time(i);
 end
-clf('reset');
-figure('name', 'k is increasing, n = 20');
+
+figure(1);
 grid on;
 hold on; 
 plot(k,glob_ct,'k+-');
@@ -50,6 +59,7 @@ plot(k,avg_ct,'rs-');
 plot(k,worst_ct,'m^-');
 plot(k,theo_ct,'bd--','LineWidth',2);
 plot(k,max_bound_theo_ct,'LineWidth',2);
+plot(k,max_bound_theo_ct2,'LineWidth',2);
 h = legend('glob','best','avg','worst','theo','max theo');
 set(h,'Location','NorthEast');
 xlabel('Number of random walkers');
