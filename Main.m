@@ -40,11 +40,17 @@ end
 %theoretical
 % k increasing
 theo_ct = zeros(1,length(k));
+theo_ct2 = zeros(1,length(k));
+
 max_bound_theo_ct = zeros(1,length(k));
 max_bound_theo_ct2 = zeros(1,length(k));
 
 for i =1:length(k)
+    % Cooper version
     theo_ct(i) = (2/k(i))*(n^2)*2*log(n);
+    
+    % Dembo version
+    theo_ct2(i) = (2/(pi*k(i)))*(n^2)*log(n^2)^2;
     max_bound_theo_ct(i) = theo_ct(i) + gossiping_time(i);
     
     max_bound_theo_ct2(i) = glob_ct(1)/i + gossiping_time(i);
@@ -58,9 +64,10 @@ plot(k,best_ct,'b*-');
 plot(k,avg_ct,'rs-');
 plot(k,worst_ct,'m^-');
 plot(k,theo_ct,'bd--','LineWidth',2);
+plot(k,theo_ct2,'LineWidth',2);
 plot(k,max_bound_theo_ct,'LineWidth',2);
 plot(k,max_bound_theo_ct2,'LineWidth',2);
-h = legend('glob','best','avg','worst','theo','max theo');
+h = legend('glob','best','avg','worst','theo','theo2','max theo','max theo2');
 set(h,'Location','NorthEast');
 xlabel('Number of random walkers');
 ylabel('Cover time');
